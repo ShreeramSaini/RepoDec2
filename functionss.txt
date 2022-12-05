@@ -1,0 +1,54 @@
+
+SQL*Plus: Release 18.0.0.0.0 - Production on Tue Jun 7 15:16:22 2022
+Version 18.4.0.0.0
+
+Copyright (c) 1982, 2018, Oracle.  All rights reserved.
+
+Enter user-name: system
+Enter password:
+Last Successful login time: Thu Jun 02 2022 13:26:48 +05:30
+
+Connected to:
+Oracle Database 18c Express Edition Release 18.0.0.0.0 - Production
+Version 18.4.0.0.0
+
+SQL> set serveroutput on
+SQL> select * from racing
+  2  ;
+
+     CARNO NAME                 TEAM                     SALARY
+---------- -------------------- -------------------- ----------
+         3 daniel               mclaren                   80000
+         4 norris               mclaren                   60000
+         5 vettel               aston                     70000
+         1 max                  redbull                  150000
+        16 charles              ferrari                  100000
+        44 lewis                merc                     100000
+
+6 rows selected.
+
+SQL> create or replace function total
+  2  return number
+  3  is
+  4  total number(2):=0;
+  5  BEGIN
+  6  select count(*) into total from racing;
+  7  return total;
+  8  end
+  9  ;
+ 10  /
+
+Function created.
+
+SQL> declare
+  2  c number(2);
+  3  begin
+  4  c:=total();
+  5  dbms_output.put_line('total no of racer in table :'||c);
+  6  end;
+  7  /
+total no of racer in table :6
+
+PL/SQL procedure successfully completed.
+
+SQL>

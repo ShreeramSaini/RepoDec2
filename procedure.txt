@@ -1,0 +1,146 @@
+SQL> create or replace procedure sum(a in number,b in number) is c number;
+  2  begin
+  3  c=a+b;
+  4  dbms_output.put_line('SUM='||c);
+  5  end;
+  6  ;
+  7  /
+
+Warning: Procedure created with compilation errors.
+
+SQL> set serveroutput on;
+SQL> create or replace procedure sum(a in number,b in number) is c number;
+  2  begin
+  3  c:=a+b;
+  4  dbms_output.put_line('SUM='||c);
+  5  end sum1;
+  6  /
+
+Warning: Procedure created with compilation errors.
+
+SQL> create or replace procedure sum1(a in number,b in number) is c number;
+  2  begin
+  3  c:=a+b;
+  4  dbms_output.put_line('SUM='||c);
+  5  end sum1;
+  6  /
+
+Procedure created.
+
+SQL> declare
+  2  x number;
+  3  y number;
+  4  begin
+  5  x:=&x;
+  6  y:=&y;
+  7  sum1(x,y
+  8  );
+  9  end;
+ 10  /
+Enter value for x: 5
+old   5: x:=&x;
+new   5: x:=5;
+Enter value for y: 8
+old   6: y:=&y;
+new   6: y:=8;
+SUM=13                                                                          
+
+PL/SQL procedure successfully completed.
+
+SQL> create or replace sum2(a in number,b in number c in number) is d number;
+create or replace sum2(a in number,b in number c in number) is d number
+                  *
+ERROR at line 1:
+ORA-00922: missing or invalid option 
+
+
+SQL> create or replace procedure sum2(a in number,b in number c in number) is d number;
+  2  begin
+  3  d:=a+b+c;
+  4  dbms_output.put_line('SUM='||d);
+  5  end sum2;
+  6  /
+
+Warning: Procedure created with compilation errors.
+
+SQL> create or replace procedure sum2(a in number,b in number,c in number) is d number;
+  2  begin
+  3  d:=a+b+c;
+  4  dbms_output.put_line('SUM='||d);
+  5  end sum2;
+  6  /
+
+Procedure created.
+
+SQL> declare
+  2  x number;
+  3  y number;
+  4  z number;
+  5  begin
+  6  x:=&x;]
+  7  /
+Enter value for x: ;
+old   6: x:=&x;]
+new   6: x:=;;]
+x:=;;]
+   *
+ERROR at line 6:
+ORA-06550: line 6, column 4: 
+PLS-00103: Encountered the symbol ";" when expecting one of the following: 
+( - + case mod new not null <an identifier> 
+<a double-quoted delimited-identifier> <a bind variable> 
+continue avg count current exists max min prior sql stddev 
+sum variance execute forall merge time timestamp interval 
+date <a string literal with character set specification> 
+<a number> <a single-quoted SQL string> pipe 
+<an alternatively-quoted string literal with character set specification> 
+<an alternatively 
+
+
+SQL> declare
+  2  x number;
+  3  y number;
+  4  z number;
+  5  begin
+  6  x:=&x;
+  7  y:=&y;
+  8  z:=&z;
+  9  end;
+ 10  /
+Enter value for x: 3
+old   6: x:=&x;
+new   6: x:=3;
+Enter value for y: 4
+old   7: y:=&y;
+new   7: y:=4;
+Enter value for z: 3
+old   8: z:=&z;
+new   8: z:=3;
+
+PL/SQL procedure successfully completed.
+
+SQL> declare
+  2  x number;
+  3  y number;
+  4  z number;
+  5  begin
+  6  x:=&x;
+  7  y:=&y;
+  8  z:=&z;
+  9  sum2(x,y,z);
+ 10  end;
+ 11  /
+Enter value for x: 1
+old   6: x:=&x;
+new   6: x:=1;
+Enter value for y: 2
+old   7: y:=&y;
+new   7: y:=2;
+Enter value for z: 3
+old   8: z:=&z;
+new   8: z:=3;
+SUM=6                                                                           
+
+PL/SQL procedure successfully completed.
+
+SQL> spool off

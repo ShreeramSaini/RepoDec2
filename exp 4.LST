@@ -1,0 +1,242 @@
+SQL> create table Emp_info(empid int, emp_name varchar2(10),location varchar2(20));
+
+Table created.
+
+SQL> desc Emp_info;
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ EMPID                                              NUMBER(38)
+ EMP_NAME                                           VARCHAR2(10)
+ LOCATION                                           VARCHAR2(20)
+
+SQL> insert into Emp_info values(1,'adi',chennai');
+ERROR:
+ORA-01756: quoted string not properly terminated 
+
+
+SQL> insert into Emp_info values(1,'adi','chennai');
+
+1 row created.
+
+SQL> insert into Emp_info values(2,'Rahul','UP');
+
+1 row created.
+
+SQL> insert into Emp_info values(3,'Ram','MP');
+
+1 row created.
+
+SQL> commit;
+
+Commit complete.
+
+SQL> seclect * from Emp_info;
+SP2-0734: unknown command beginning "seclect * ..." - rest of line ignored.
+SQL> select * from Emp_info;
+
+     EMPID EMP_NAME   LOCATION                                                  
+---------- ---------- --------------------                                      
+         1 adi        chennai                                                   
+         2 Rahul      UP                                                        
+         3 Ram        MP                                                        
+
+SQL> update Emp_info set location=Kerala where Empid=2;
+update Emp_info set location=Kerala where Empid=2
+                             *
+ERROR at line 1:
+ORA-00904: "KERALA": invalid identifier 
+
+
+SQL> update Emp_info set location= 'Kerala' where Empid=2;
+
+1 row updated.
+
+SQL> select * from Emp_info;
+
+     EMPID EMP_NAME   LOCATION                                                  
+---------- ---------- --------------------                                      
+         1 adi        chennai                                                   
+         2 Rahul      Kerala                                                    
+         3 Ram        MP                                                        
+
+SQL> commit;
+
+Commit complete.
+
+SQL> delete from emp_info where Empid=3;
+
+1 row deleted.
+
+SQL> select * from Emp_info;
+
+     EMPID EMP_NAME   LOCATION                                                  
+---------- ---------- --------------------                                      
+         1 adi        chennai                                                   
+         2 Rahul      Kerala                                                    
+
+SQL> rollback;
+
+Rollback complete.
+
+SQL> select * from Emp_info;
+
+     EMPID EMP_NAME   LOCATION                                                  
+---------- ---------- --------------------                                      
+         1 adi        chennai                                                   
+         2 Rahul      Kerala                                                    
+         3 Ram        MP                                                        
+
+SQL> update Emp_info set location= 'delhi' where Empid=3;
+
+1 row updated.
+
+SQL> select * from Emp_info;
+
+     EMPID EMP_NAME   LOCATION                                                  
+---------- ---------- --------------------                                      
+         1 adi        chennai                                                   
+         2 Rahul      Kerala                                                    
+         3 Ram        delhi                                                     
+
+SQL> savepoint s1;
+
+Savepoint created.
+
+SQL> update Emp_info set emp_name= 'aman' where Empid=3;
+
+1 row updated.
+
+SQL> savepoint s2;
+
+Savepoint created.
+
+SQL> update Emp_info set emp_name= 'shree' where Empid=2;
+
+1 row updated.
+
+SQL> savepoint s3;
+
+Savepoint created.
+
+SQL> select * from Emp_info;
+
+     EMPID EMP_NAME   LOCATION                                                  
+---------- ---------- --------------------                                      
+         1 adi        chennai                                                   
+         2 shree      Kerala                                                    
+         3 aman       delhi                                                     
+
+SQL> rollback to s2;
+
+Rollback complete.
+
+SQL> select * from Emp_info;
+
+     EMPID EMP_NAME   LOCATION                                                  
+---------- ---------- --------------------                                      
+         1 adi        chennai                                                   
+         2 Rahul      Kerala                                                    
+         3 aman       delhi                                                     
+
+SQL> rollback to s1;
+
+Rollback complete.
+
+SQL> select * from Emp_info;
+
+     EMPID EMP_NAME   LOCATION                                                  
+---------- ---------- --------------------                                      
+         1 adi        chennai                                                   
+         2 Rahul      Kerala                                                    
+         3 Ram        delhi                                                     
+
+SQL> rollback;
+
+Rollback complete.
+
+SQL> rollback to s1;
+rollback to s1
+*
+ERROR at line 1:
+ORA-01086: savepoint 'S1' never established in this session or is invalid 
+
+
+SQL> create user C##Aman identified by abc123;
+
+User created.
+
+SQL> select * from Emp_info;
+
+     EMPID EMP_NAME   LOCATION                                                  
+---------- ---------- --------------------                                      
+         1 adi        chennai                                                   
+         2 Rahul      Kerala                                                    
+         3 Ram        MP                                                        
+
+SQL> connect;
+Enter user-name: C##Aman
+ERROR:
+ORA-01045: user C##AMAN lacks CREATE SESSION privilege; logon denied 
+
+
+Warning: You are no longer connected to ORACLE.
+SQL> connect;
+Enter user-name: C##Aman
+ERROR:
+ORA-01045: user C##AMAN lacks CREATE SESSION privilege; logon denied 
+
+
+SQL> grant select, insert on emp_info to C##Aman;
+SP2-0640: Not connected
+SQL> connect;
+Enter user-name: C##Aman
+ERROR:
+ORA-01017: invalid username/password; logon denied 
+
+
+SQL> connect;
+Enter user-name: C##Aman
+ERROR:
+ORA-01045: user C##AMAN lacks CREATE SESSION privilege; logon denied 
+
+
+SQL> connect;
+Enter user-name: system
+Connected.
+SQL> grant select, insert on emp_info to C##Aman;
+
+Grant succeeded.
+
+SQL> connect
+Enter user-name: C##Aman
+ERROR:
+ORA-01045: user C##AMAN lacks CREATE SESSION privilege; logon denied 
+
+
+Warning: You are no longer connected to ORACLE.
+SQL> connect;
+Enter user-name: system
+Connected.
+SQL> grant create to C##Aman;
+grant create to C##Aman
+      *
+ERROR at line 1:
+ORA-01919: role 'CREATE' does not exist 
+
+
+SQL> grant create session to C##Aman;
+
+Grant succeeded.
+
+SQL> connect;
+Enter user-name: C##Aman
+Connected.
+SQL> select * from system.emp_info;
+
+     EMPID EMP_NAME   LOCATION                                                  
+---------- ---------- --------------------                                      
+         1 adi        chennai                                                   
+         2 Rahul      Kerala                                                    
+         3 Ram        MP                                                        
+
+SQL> spool off;
